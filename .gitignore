@@ -1,0 +1,12 @@
+node_modules/
+dist/
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+.env
+.env.*
+!.env.example
+*.log
+FullStackDeveloper_CaseStudy_Oct26.pdf
+support images/

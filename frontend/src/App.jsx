@@ -66,7 +66,7 @@ export default function App() {
     ["Total heatwave events", data.yearly.reduce((a, r) => a + r.events, 0)],
     ["Total heatwave days", data.yearly.reduce((a, r) => a + r.heatwave_days, 0)],
     ["Longest event (days)", Math.max(...data.yearly.map((r) => r.max_duration))],
-    ["Linear trend (days/decade)", t ? `${t.linear_slope_per_decade > 0 ? "+" : ""}${t.linear_slope_per_decade.toFixed(2)}` : "n/a"],
+    ["Linear trend (days/decade)", t?.linear_slope_per_decade != null ? `${t.linear_slope_per_decade > 0 ? "+" : ""}${t.linear_slope_per_decade.toFixed(2)}` : "n/a"],
   ];
 
   return (

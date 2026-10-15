@@ -8,7 +8,11 @@ heatwaves became more frequent, longer or more intense, with statistical signifi
 - **Database:** MongoDB (Atlas in production, in-memory `mongomock` for local dev and tests)
 - **Data:** Open-Meteo Historical Weather API (ERA5 reanalysis), daily `temperature_2m_max`
 
-Live app: _add Vercel URL_ · API: _add Render URL_ · Demo video: _optional_
+- **Live app:** https://full-stack-developer-case-study.vercel.app
+- **API:** https://climate-hazard-api-uku6.onrender.com (interactive docs at `/docs`)
+- **Demo video:** _add link_
+
+The API runs on Render's free tier, so the first request after an idle period can take ~50 s while the service wakes up.
 
 ## Setup
 
@@ -30,9 +34,12 @@ npm run dev                                            # http://localhost:5173 (
 Without `MONGODB_URI` the backend uses an in-memory DB (cache is lost on restart). For production set
 `MONGODB_URI` and `CORS_ORIGINS` on the backend, and `VITE_API_URL` (backend origin) on the frontend build.
 
-### Deploy
-- Backend → Render (`render.yaml` included). Env: `MONGODB_URI`, `CORS_ORIGINS=https://<your-frontend>`.
-- Frontend → Vercel/Netlify: root `frontend`, build `npm run build`, output `dist`, env `VITE_API_URL=https://<render-url>`.
+### Deploy (as deployed)
+- **Backend → Render** (Blueprint from `render.yaml`, free plan). Env: `MONGODB_URI` (MongoDB Atlas M0),
+  `CORS_ORIGINS=https://full-stack-developer-case-study.vercel.app` (comma-separate to also allow `http://localhost:5173`).
+- **Frontend → Vercel:** root `frontend`, preset Vite, build `npm run build`, output `dist`, env `VITE_API_URL=https://climate-hazard-api-uku6.onrender.com`.
+  `VITE_*` variables are baked in at build time, so redeploy after changing them.
+- Atlas Network Access allows `0.0.0.0/0` because Render's free tier has no fixed outbound IP.
 
 ## Architecture
 
@@ -104,6 +111,10 @@ React (Vite) ──GET /api/analysis──▶ FastAPI ──▶ MongoDB  analyse
 - Drought and heavy-rainfall hazards behind the same pipeline (`hazard` is already an enum in the API).
 
 ## AI tools used
-- **Claude Code (Claude Sonnet)** scaffolded the FastAPI backend, heatwave detection, trend/insight code, tests, React UI and this README.
-  I reviewed the logic (percentile thresholds, run detection, trend stats), ran the tests, and checked results against live
-  Open-Meteo data.
+- **Claude Code (Claude Sonnet)**, used as a pair-programmer. It scaffolded the FastAPI backend, heatwave detection,
+  trend/insight code, tests, React UI and a first draft of this README.
+- **What I did myself:** chose the hazard definition and its parameters (95th percentile, 3+ days, 1991-2020 baseline),
+  reviewed the detection and trend logic, ran the tests, checked results against live Open-Meteo data, debugged
+  integration problems (for example, a stale backend returning a different response shape than the frontend expected),
+  and handled the MongoDB Atlas and Render deployment.
+- I can walk through and modify any part of the code in the interview.
